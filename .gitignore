@@ -2,4 +2,3 @@ _source/
 node_modules/
 .DS_Store
 *.log
-/.password

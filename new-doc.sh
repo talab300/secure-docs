@@ -31,7 +31,7 @@ chmod 600 "$dir/.password"
 cat <<EOF
 Created: $dir/
 Password: $password
-URL (after push): https://speedkills300-png.github.io/secure-docs/$doc_name/
+URL (after push): https://talab300.github.io/secure-docs/$doc_name/
 
 Next steps:
   1. Place HTML and assets under $dir/

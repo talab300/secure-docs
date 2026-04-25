@@ -33,7 +33,7 @@ new-doc.sh <name>              # Scaffold a new document with a random password
 git add docs && git commit -m "add: 20260601-some-topic" && git push
 ```
 
-URL: `https://speedkills300-png.github.io/secure-docs/20260601-some-topic/`
+URL: `https://talab300.github.io/secure-docs/20260601-some-topic/`
 
 ## Update an existing document
 

@@ -35,6 +35,18 @@ for doc_dir in _source/*/; do
     exit 1
   fi
 
+  # Persistent per-document salt so that share URLs remain stable across re-encryptions.
+  salt_file="$doc_dir/.salt"
+  if [ ! -f "$salt_file" ]; then
+    openssl rand -hex 16 > "$salt_file"
+    chmod 600 "$salt_file"
+  fi
+  salt="$(tr -d '\r\n' < "$salt_file")"
+  if [ -z "$salt" ]; then
+    echo "error: $salt_file is empty" >&2
+    exit 1
+  fi
+
   echo ">> encrypting $doc_name"
   outdir="docs/$doc_name"
   mkdir -p "$outdir"
@@ -46,6 +58,7 @@ for doc_dir in _source/*/; do
     mkdir -p "$html_outdir"
     npx -y staticrypt@3 "$html" \
       --password "$password" \
+      --salt "$salt" \
       --short \
       --template-title "Protected Document" \
       --template-instructions "Enter the password to view this document." \
@@ -60,7 +73,11 @@ for doc_dir in _source/*/; do
 
   while IFS= read -r -d '' f; do
     rel="${f#$doc_dir}"
+    # Local-only files that must NOT be published.
     [ "$rel" = ".password" ] && continue
+    [ "$rel" = ".salt" ] && continue
+    [ "$rel" = "share-url.txt" ] && continue
+    [[ "$rel" == *.pdf ]] && continue
     dest="$outdir/$rel"
     mkdir -p "$(dirname "$dest")"
     cp "$f" "$dest"
